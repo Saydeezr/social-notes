@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const routes = require('./routes');
+const { Note } = require('./models');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -11,8 +12,9 @@ const client = new MongoClient(url);
 
 let db;
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(routes);
-
 
 const init = async () => {
     try{
