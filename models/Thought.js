@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 
-
 //subdocument to be used in Thought model
 const reactionSchema = new mongoose.Schema({
     reactionId: { type: Schema.Types.ObjectId, default: Schema.Types.ObjectId },
@@ -16,7 +15,5 @@ const Thought = mongoose.model('Thought', new mongoose.Schema({
     username: { type: String, required: true },
     reactions: [reactionSchema]
 }));
-
-
 
 module.exports = Thought;

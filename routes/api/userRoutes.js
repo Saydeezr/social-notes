@@ -4,8 +4,9 @@ const { User } = require('../../models');
 //get all users
 router.get('/', async (req,res) => {
     try{
-        const user = await User.find({});
-        res.json(user);
+        const userData = await User.find({}); 
+
+        res.json(userData);
     } catch (err) {
         console.error(err)
         return res.status(500).json(err);
@@ -14,9 +15,9 @@ router.get('/', async (req,res) => {
 
 //get one user
 router.get('/:id', async (req,res) => {
-    try{                                //not sure this is correct
-        const user = await User.find({username: req.body.username})
-        res.json(user);
+    try{                               
+        const userData = await User.find({username: req.body.username})
+        res.json(userData);
     } catch(err){
         console.error(err)
         return res.status(500).json(err);
@@ -40,6 +41,7 @@ router.post('/', async (req,res) => {
         return res.status(500).json(err);
 }});
 
+//update user
 router.put('/:username', async (req,res) => {
     try{
         const user = await User.findOneAndUpdate({username: req.params.username}, req.body)        
