@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../../models');
 
+//get all users
 router.get('/', async (req,res) => {
     try{
         const user = await User.find({});
@@ -11,18 +12,22 @@ router.get('/', async (req,res) => {
     }
 });
 
+//get one user
 router.get('/:id', async (req,res) => {
-    try{
-        const user = await User.findById({})
+    try{                                //not sure this is correct
+        const user = await User.findById({username: req.body.username})
+        res.json(user);
     } catch(err){
         console.error(err)
         return res.status(500).json(err);
     }
 })
 
+//create new user
 router.post('/', async (req,res) => {
-    try {
-        const newUser = await User.create({username: req.body.user})
+    try {                                //do I add the email too?
+        const newUser = await User.create({username: req.body.username})
+        newUser.save();
 
         if(newUser) {
             res.status(200).json(newUser);
@@ -37,7 +42,7 @@ router.post('/', async (req,res) => {
 
 router.put('/', async (req,res) => {
     try{
-        const user = await User.up
+        const user = await User.findOneAndUpdate({ username: req.body.user})
     } catch(err) {
         console.error(err)
         return res.status(500).json(err);
