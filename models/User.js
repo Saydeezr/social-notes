@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const thoughtSchema = require('./Thought')
+const { Schema } = require('mongoose');
 
 const User = mongoose.model('User', new mongoose.Schema({
     username: { 
@@ -12,16 +13,10 @@ const User = mongoose.model('User', new mongoose.Schema({
         type: String, 
         required: true, 
         unique: true, 
-        validate: {
-            validator: function (value) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-            }, message: 'Invalid email address format',
-        }
+        match: [/.+@.+\..+/, 'must match valid email'],
     },
-    thoughts: [thoughtSchema], 
-    friends: { //need to work on
-        friendCount: [] 
-    }
+    thoughts: [{ type: Schema.Types.ObjectId, ref: 'Thought' }], 
+    friends: [{ type: Schema.Types.ObjectId, ref: 'User'}]
 }));
 
 module.exports = User;

@@ -15,7 +15,7 @@ router.get('/', async (req,res) => {
 //get one user
 router.get('/:id', async (req,res) => {
     try{                                //not sure this is correct
-        const user = await User.findById({username: req.body.username})
+        const user = await User.find({username: req.body.username})
         res.json(user);
     } catch(err){
         console.error(err)
@@ -25,8 +25,8 @@ router.get('/:id', async (req,res) => {
 
 //create new user
 router.post('/', async (req,res) => {
-    try {                                //do I add the email too?
-        const newUser = await User.create({username: req.body.username})
+    try {                                
+        const newUser = await User.create(req.body)
         newUser.save();
 
         if(newUser) {
@@ -40,11 +40,13 @@ router.post('/', async (req,res) => {
         return res.status(500).json(err);
 }});
 
-router.put('/', async (req,res) => {
+router.put('/:username', async (req,res) => {
     try{
-        const user = await User.findOneAndUpdate({ username: req.body.user})
+        const user = await User.findOneAndUpdate({username: req.params.username}, req.body)        
     } catch(err) {
         console.error(err)
         return res.status(500).json(err);
     }
 })
+
+module.exports = router;
