@@ -3,7 +3,7 @@ const { Schema } = require('mongoose');
 
 //subdocument to be used in Thought model
 const reactionSchema = new mongoose.Schema({
-    reactionId: { type: Schema.Types.ObjectId, default: Schema.Types.ObjectId },
+    reactionId: { type: Schema.Types.ObjectId, default: () => new Schema.Types.ObjectId() },
     reactionBody: { type: String, required: true, maxLength: 280 },
     username: { type: String, required: true },
     createdOn: { type: Date, default: Date.now }

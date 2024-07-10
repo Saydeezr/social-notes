@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { default: mongoose } = require('mongoose');
 const { Thought, User } = require('../../models');
 
 //get all thoughts
@@ -46,7 +47,7 @@ router.post('/', async (req,res) => {
 //update thought
 router.put('/:_id', async (req,res) =>{
     try{
-        const thoughtData = await Thought.findByIdAndUpdate({id: req.params._id}, req.body,
+        const thoughtData = await Thought.findByIdAndUpdate(req.params._id, req.body,
             {new: true});
 
         if(thoughtData){
@@ -60,7 +61,7 @@ router.put('/:_id', async (req,res) =>{
 });
 
 //delete thought
-router.delete('/:_id', async(req,res) =>{
+router.delete('/:_id', async (req,res) =>{
     try {
         const thoughtData = await Thought.findByIdAndDelete(req.params._id);
 
@@ -70,6 +71,42 @@ router.delete('/:_id', async(req,res) =>{
             res.status(400).json({message: 'Thought not found. Please try again.'})
         }
     } catch(err) {
+        return res.status(500).json(err);
+    }
+});
+
+//post new reaction
+router.post('/:thoughtId/reactions', async (req,res) => {
+    try {
+        const thoughtData = await Thought.findById(req.params.thoughtId);
+
+        if(thoughtData) {
+            const newReaction = req.body;
+            newReaction.reactionId = new mongoose.Types.ObjectId();
+            thoughtData.reactions.push(newReaction)
+            await thoughtData.save();
+            res.status(200).json(thoughtData);
+        } else {
+            res.status(404).json({message: 'Thought not found. Please try again.'})
+        }
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+//delete reaction
+router.delete('/:thoughtId/reactions', async (req,res) => {
+    try {
+        const thoughtData = await Thought.findById(req.params.thoughtId);
+        
+        if (thoughtData) {
+            thoughtData.reactions.pop();
+            await thoughtData.save();
+            res.status(200).json(thoughtData);
+        } else {
+            res.status(404).json({ message: 'Thought not found. Please try again.' });
+        }
+    } catch (err) {
         return res.status(500).json(err);
     }
 });
