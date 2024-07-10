@@ -15,7 +15,11 @@ router.get('/', async (req,res) => {
 router.get('/:username', async (req,res) => {
     try{                               
         const userData = await User.find({username: req.params.username})
-        res.json(userData);
+        if(userData) {
+            res.status(200).json(userData)
+        } else{
+            res.status(404).json({message: "User not found"})
+        }
     } catch(err){
         return res.status(500).json(err);
     }
@@ -30,7 +34,7 @@ router.post('/', async (req,res) => {
         if(newUser) {
             res.status(200).json(newUser);
         } else { 
-            res.status(500).json({ message: 'User not found'});
+            res.status(500).json({ message: 'Error creating user. Please try again.'});
         } 
     } catch(err){
         return res.status(500).json(err);
