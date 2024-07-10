@@ -5,21 +5,18 @@ const { User } = require('../../models');
 router.get('/', async (req,res) => {
     try{
         const userData = await User.find({}); 
-
         res.json(userData);
     } catch (err) {
-        console.error(err)
         return res.status(500).json(err);
     }
 });
 
 //get one user
-router.get('/:id', async (req,res) => {
+router.get('/:username', async (req,res) => {
     try{                               
-        const userData = await User.find({username: req.body.username})
+        const userData = await User.find({username: req.params.username})
         res.json(userData);
     } catch(err){
-        console.error(err)
         return res.status(500).json(err);
     }
 })
@@ -33,20 +30,38 @@ router.post('/', async (req,res) => {
         if(newUser) {
             res.status(200).json(newUser);
         } else { 
-            console.log('Error occured. Please try again.');
-            res.status(500).json({ message: 'Error'});
+            res.status(500).json({ message: 'User not found'});
         } 
     } catch(err){
-        console.error(err)
         return res.status(500).json(err);
 }});
 
 //update user
 router.put('/:username', async (req,res) => {
     try{
-        const user = await User.findOneAndUpdate({username: req.params.username}, req.body)        
+        const userData = await User.findOneAndUpdate({username: req.params.username}, req.body,
+            {new: true});
+        if(userData){
+            res.status(200).json(userData)
+        } else{
+            res.status(500).json({ message: 'User not found'}); 
+        };       
     } catch(err) {
-        console.error(err)
+        return res.status(500).json(err);
+    }
+});
+
+//delete user
+router.delete('/:username', async (req,res) =>{
+    try {
+        const userData = await User.findOneAndDelete({username: req.params.username},
+            {new: true});
+            if(userData){
+                res.status(200).json(userData)
+            } else{
+                res.status(500).json({ message: 'User not found'}); 
+            }; 
+    } catch (error) {
         return res.status(500).json(err);
     }
 })
