@@ -4,4 +4,5 @@
  ## Installation
  Express.js for routing, a MongoDB database, and the Mongoose ODM.
 
- 
+below is a video of API use using postman:
+ https://drive.google.com/file/d/1TLnAkhu4DVLOMSiw77-KIs-BGmTUcYMg/view
